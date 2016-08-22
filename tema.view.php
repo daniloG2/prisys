@@ -35,7 +35,10 @@
 		</div>
 	</div>
 
-	<div class="col-sm-12 divEdit" ng-bind-html="Html( tema.descripcion )"></div>
+	<div class="col-sm-12" style="margin:0;padding:0;">
+		<div id="verTema"></div>
+	</div>
+
 	<div class="col-sm-12 text-right" style="margin-top:4px">
 		<button type="button" class="btn btn-sm btn-default" ng-click="ventana1=true">
 			<span class="glyphicon glyphicon-comment"></span>

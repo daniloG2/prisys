@@ -8,6 +8,9 @@ miApp.controller('ctrlTema', function($scope, $http, $routeParams, $timeout, $sc
 		})
 		.success(function (data) {
 			$scope.tema = data.tema;
+			$timeout(function () {
+				$('#verTema').trumbowyg("html", data.tema.descripcion);
+			});
 		});
 	};
 
@@ -46,4 +49,6 @@ miApp.controller('ctrlTema', function($scope, $http, $routeParams, $timeout, $sc
 	};
 
 	$('#divEdit').trumbowyg();
+	$('#verTema').trumbowyg();
+
 });
