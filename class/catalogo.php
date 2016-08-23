@@ -10,7 +10,7 @@ class Catalogo
 		global $conexion;
 		$respuesta = array();
 
-		$sql = "SELECT idArea, area FROM area";
+		$sql = "SELECT idArea, area FROM area WHERE idArea <= 3 ";
 		$result = $conexion->query( $sql );
 
 		while ( $row = $result->fetch_object() ) {

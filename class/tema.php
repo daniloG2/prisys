@@ -57,6 +57,34 @@ class Tema
 		return $respuesta;
 	}
 
+	public function modificarTema( $idTema, $descripcion )
+	{
+		global $conexion, $data;
+		$respuesta = array( "response" => 0, "msg" => "ERROR" );
+
+		$descripcion = $conexion->real_escape_string( $descripcion );
+
+		$sql = "SELECT usuario FROM tema WHERE idTema = '{$idTema}' ";
+		$rs = $conexion->query( $sql );
+		if ( $row = $rs->fetch_object() ) {
+			if ( $row->usuario == $_SESSION['user'] ) {
+				$sql = "UPDATE tema SET descripcion = '{$descripcion}' 
+						WHERE idTema = '{$idTema}' ";
+				if ( $conexion->query( $sql ) ) {
+					$respuesta = array( "response" => 1, "msg" => "Guardado correctamente" );
+				}
+				else{
+					$respuesta = array( "response" => 0, "msg" => "ERROR: " . $conexion->error );
+				}
+			}
+			else {
+				$respuesta = array( "response" => 0, "msg" => "Solo puede modificarlo ({$row->usuario}) " );
+			}
+		}
+
+		return $respuesta;
+	}
+
 	public function lstTemas()
 	{
 		global $conexion, $data;
@@ -181,15 +209,23 @@ class Tema
 		$comentarios = array();
 
 		$sql = "SELECT 
+					c.idComentario,
 					c.comentario,
 					c.idTemaReferencia,
-				    DATE_FORMAT( c.fechaHora, '%d/%m/%Y - %H:%i' )as 'fecha',
-				    u.usuario,
-				    u.nombre
+					DATE_FORMAT( c.fechaHora, '%d/%m/%Y - %H:%i' )as 'fecha',
+					u.usuario,
+					u.nombre,
+				    ROUND(SUM( IFNULL( cc.idImportancia, 0) ) /
+				    COUNT( cc.idComentario ))AS 'ranking',
+					SUM( IF( cc.usuario = '" . $_SESSION['user'] . "', cc.idImportancia, 0 ) )AS 'miVoto'
 				FROM comentario AS c
 					JOIN usuario AS u
 						ON c.usuario = u.usuario
-				WHERE c.idTema = '{$idTema}'";
+					LEFT JOIN calificacionComentario AS cc
+						ON c.idComentario = cc.idComentario
+				WHERE c.idTema = '{$idTema}'
+				GROUP BY c.idComentario
+				ORDER BY ranking ASC, c.fechaHora ASC ";
 		$rs = $conexion->query( $sql );
 		while ( $row = $rs->fetch_object() ) {
 			$comentarios[] = $row;
@@ -217,8 +253,22 @@ class Tema
 		return $respuesta;
 	}
 
+	public function votarTema( $idComentario, $idTema, $voto )
+	{
+		global $conexion;
+		$respuesta = array( "response" => 0, "msg" => "ERROR" );
 
+		$sql = "INSERT INTO calificacionComentario (idComentario, usuario, idImportancia) 
+				VALUES ('{$idComentario}', '" . $_SESSION['user'] . "', {$voto} )
+				ON DUPLICATE KEY UPDATE idImportancia = {$voto} ";
+		if ( $conexion->query( $sql ) ) {
+			$respuesta = array( "response" => 1, "msg" => "Guardado correctamente", "lstComentarios" => $this->lstComentarios( $idTema ) );
+		}else{
+			$respuesta = array( "response" => 0, "msg" => $conexion->error );
+		}
 
+		return $respuesta;
+	}
 }
 ?>
 

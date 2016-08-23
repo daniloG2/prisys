@@ -34,6 +34,13 @@ switch ( $data->accion ) {
 		echo json_encode( $datos );
 	break;
 
+	case 'modificarTema':
+		$tema  = new Tema();
+		$datos = $tema->modificarTema( $data->idTema, $data->descripcion );
+
+		echo json_encode( $datos );
+	break;
+
 	case 'getTemas':
 		$tema = new Tema();
 		$datos['lstTemas'] = $tema->lstTemas();
@@ -53,6 +60,13 @@ switch ( $data->accion ) {
 		$datos = $tema->agregarComentario( $data->idTema, $data->comentario );
 
 		echo json_encode( $datos );
+	break;
+
+	case 'votarTema':
+		$tema = new Tema();
+		$respuesta = $tema->votarTema( $data->idComentario, $data->idTema, $data->voto );
+
+		echo json_encode( $respuesta );
 	break;
 
 	default:

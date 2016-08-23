@@ -44,6 +44,45 @@ miApp.controller('ctrlTema', function($scope, $http, $routeParams, $timeout, $sc
 		});
 	}
 
+	$scope.modificarTema = function () {
+		var descripcion = $("#verTema").html();
+
+		$http.post('response.php', {
+			accion      : 'modificarTema',
+			idTema      : $scope.tema.idTema,
+			descripcion : descripcion
+		})
+		.success(function (data) {
+			console.log( data );
+			
+			if ( data.response ) {
+				alert( data.msg );
+			}
+			else {
+				var msg = data.msg ? data.msg : data;
+				alert( msg );
+			}
+		});
+	};
+
+	$scope.votar = function ( idComentario, voto ) {
+		$http.post('response.php', {
+			accion       : 'votarTema',
+			idComentario : idComentario,
+			idTema       : $scope.tema.idTema,
+			voto         : voto
+		})
+		.success(function (data) {
+			if ( data.response ) {
+				$scope.tema.comentarios = data.lstComentarios
+			}
+			else {
+				var msg = data.msg ? data.msg : data;
+				alert( msg );
+			}
+		});
+	};
+
 	$scope.Html = function ( html ) {
 		return $sce.trustAsHtml( html );
 	};
