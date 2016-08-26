@@ -19,7 +19,6 @@ miApp.controller('ctrlIngresar', function($scope, $http, $routeParams, $timeout)
     	var form = data.form, files = data.files, extra = data.extra, response = data.response, reader = data.reader;
     	console.log('LOTES DE CARGA DE ARCHIVOS', data);
 	})
-    // se activa si presionan el boton de subida
 	.on('fileuploaded', function(event, data, previewId, index) {
     	alert( data.response.mensaje );
    		if( data.response.respuesta ){

@@ -5,6 +5,7 @@
 	<title>PriSys</title>
 	<link rel="stylesheet" href="css/bootstrap.min.css">
 	<link rel="stylesheet" href="css/style.css">
+	<link rel="stylesheet" href="css/fileinput.css">
 </head>
 <body ng-controller="home">
 <div class="navbar">
@@ -29,9 +30,12 @@
 </div>
 
 <script src="js/jquery-1.12.1.min.js"></script>
+<script src="js/bootstrap.min.js"></script>
 <script src="js/angular.min.js"></script>
 <script src="js/angular-route.min.js"></script>
 <script src="js/main.js"></script>
+<script src="js/fileinput.min.js"></script>
+<script src="js/locales/es.js"></script>
 <script src="js/ctrlIngresar.js"></script>
 <script src="js/ctrlTemas.js"></script>
 <script src="js/ctrlTema.js"></script>
