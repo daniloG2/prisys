@@ -28,7 +28,7 @@
 <div class="container">
 	<div ng-view style="position:relative; width:100%;"></div>
 </div>
-
+prueba
 <script src="js/jquery-1.12.1.min.js"></script>
 <script src="js/bootstrap.min.js"></script>
 <script src="js/angular.min.js"></script>
