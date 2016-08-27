@@ -61,6 +61,9 @@
 
 	<!-- COMENTARIO Y MODIFICAR -->
 	<div class="col-sm-12 text-right" style="margin-top:-18px;margin-bottom:4px">
+		<button type="button" class="btn btn-info btn-sm" data-toggle="modal" data-target="#modalArchivos">
+		  <span class="glyphicon glyphicon-cloud-upload"></span> <b>SUBIR ARCHIVOS</b>
+		</button>
 		<button type="button" class="btn btn-sm btn-primary" ng-click="modificarTema()">
 			<span class="glyphicon glyphicon-pencil"></span>
 			<b>Modificar</b>

@@ -1,7 +1,6 @@
 miApp.controller('ctrlIngresar', function($scope, $http, $routeParams, $timeout){
 
 	$scope.subirArchivo        = true;
-	$scope.idTema              = undefined;
 	$scope.catArea             = [];
 	$scope.catImportancia      = [];
 	$scope.catTipoBibliografia = [];
