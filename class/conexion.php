@@ -6,7 +6,7 @@ function Conexion()
 {
 	$host = "localhost";
 	$user = "root";
-	$pass = "root";
+	$pass = "";
 	$db   = "privado_db";
 
 	$con = new mysqli($host, $user, $pass, $db) or die ('No se pudo conectar a la BD');
