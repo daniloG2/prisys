@@ -46,7 +46,7 @@ miApp.controller('ctrlIngresar', function($scope, $http, $routeParams, $timeout)
 	});
 
 
-	$scope.subirArchivo        = false;
+	$scope.subirArchivo        = true;
 	$scope.idTema              = undefined;
 	$scope.catArea             = [];
 	$scope.catImportancia      = [];

@@ -9,6 +9,10 @@
 		</a>
 	</div>
 	<div class="col-sm-4 text-right">
+		<button type="button" class="btn btn-xs btn-default" ng-click="tema.showAdj=!tema.showAdj">
+			<span class="glyphicon glyphicon-link"></span>
+			<span class="badge">{{tema.adjuntos.length}}</span>
+		</button>
 		<button type="button" class="btn btn-xs btn-primary" ng-click="tema.showBib=!tema.showBib">
 			<span class="glyphicon glyphicon-book"></span>
 			<span class="badge">{{tema.bibliografias.length}}</span>
@@ -17,6 +21,20 @@
 		{{tema.fecha}}
 	</div>
 	<div class="col-sm-12" style="margin-top:5px;margin-bottom:5px">
+		<div class="table-responsive" ng-show="tema.showAdj">
+			<table class="table table-hover">
+				<tbody>
+					<tr ng-repeat="adj in tema.adjuntos">
+						<td>
+							<a ng-href="{{adj.url}}" target="_blank">
+								<span class="glyphicon glyphicon-link"></span>
+								{{adj.nombre}}
+							</a>
+						</td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
 		<div class="table-responsive" ng-show="tema.showBib">
 			<table class="table table-hover">
 				<tbody>

@@ -60,7 +60,7 @@ if( $result = $conect->query($sql) ){
 			$rutaArchivo    = $carpetaAdjunta . $nombreArchivo; 		// DIRECTORIO + ARCHIVO
 
 			if( move_uploaded_file( $nombreTemporal, $rutaArchivo ) ){	// VALIDAR QUE LOS ARCHIVOS SE CARGUEN
-
+				$rutaArchivo = rtrim( $rutaArchivo, "../" );
 				$sql = "INSERT INTO adjunto (nombre, url) VALUES('{$nombreArchivo}', '$rutaArchivo')";
 
 				if( $conect->query( $sql ) ){

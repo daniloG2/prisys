@@ -26,11 +26,11 @@
 		<div class="form-group">
 			<label class="col-sm-1">Tema</label>
 			<div class="col-sm-6">
-				<input type="text" ng-model="tema.tema" class="form-control" placeholder="Tema">
+				<input type="text" ng-model="tema.tema" class="form-control" placeholder="Tema" autofocus>
 			</div>
 			<label class="col-sm-1">Area</label>
 			<div class="col-sm-4">
-				<select ng-model="tema.idArea" class="form-control" autofocus>
+				<select ng-model="tema.idArea" class="form-control">
 					<option value="{{a.idArea}}" ng-repeat="a in catArea">{{a.area}}</option>
 				</select>
 			</div>
@@ -57,8 +57,8 @@
 				<div id="divEdit"></div>
 			</div>
 		</div>
-		<div class="col-sm-12 text-right">
-			<button type="button" class="btn" ng-class="{'btn-info': subirArchivo, ' btn-warning': !subirArchivo}" ng-click="subirArchivo=!subirArchivo">
+		<div class="col-sm-12 text-left" style="margin-top:-22px;margin-bottom:7px;">
+			<button type="button" class="btn btn-sm" ng-class="{'btn-info': subirArchivo, ' btn-warning': !subirArchivo}" ng-click="subirArchivo=!subirArchivo">
 				<span class="glyphicon" ng-class="{'glyphicon-check': subirArchivo, 'glyphicon-unchecked': !subirArchivo}"></span>
 				Subir Archivos
 			</button>

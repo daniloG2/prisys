@@ -48,7 +48,7 @@ class Tema
 				}
 			}
 
-			$respuesta = array( "response" => 1, "msg" => "Guardado correctamente" );
+			$respuesta = array( "response" => 1, "msg" => "Guardado correctamente", "idTema" => $idTema );
 		}
 		else{
 			$respuesta = array( "response" => 0, "msg" => "ERROR: " . $conexion->error );
@@ -182,6 +182,7 @@ class Tema
 				$row->etiquetas = array();
 
 			$row->comentarios   = $this->lstComentarios( $idTema );
+			$row->adjuntos      = $this->lstAdjuntos( $idTema );
 			$row->bibliografias = array();
 
 			$sql = "SELECT 
@@ -232,6 +233,24 @@ class Tema
 		}
 
 		return $comentarios;
+	}
+
+	public function lstAdjuntos( $idTema )
+	{
+		global $conexion;
+		$adjuntos = array();
+
+		$sql = "SELECT a.nombre, a.url
+				FROM temaAdjunto AS ta
+					JOIN adjunto AS a 
+						ON ta.idAdjunto = a.idAdjunto
+				WHERE ta.idTema = '{$idTema}' ";
+		$rs = $conexion->query( $sql );
+		while ( $row = $rs->fetch_object() ) {
+			$adjuntos[] = $row;
+		}
+
+		return $adjuntos;
 	}
 
 	public function agregarComentario( $idTema, $comentario )
