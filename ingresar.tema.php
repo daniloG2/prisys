@@ -1,26 +1,3 @@
-<!-- Modal -->
-<div class="modal" id="modalArchivos" data-backdrop="static" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
-  	<div class="modal-dialog" role="document">
-    	<div class="modal-content">
-      		<div class="modal-header">
-        		<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-        		<h4 class="modal-title" id="myModalLabel"><i class="glyphicon glyphicon-cloud-upload"></i> SUBIR ARCHIVOS</h4>
-      		</div>
-      		<div class="modal-body">
-				<form enctype="multipart/form-data">
-					<label>ID DEL TEMA</label>
-                	<input type="text" class="form-control" ng-model="idTema" readonly />
-                	<label>SELECCIONE LOS ARCHIVOS</label>
-                	<input id="documentos" name="archivos[]" type="file" multiple>
-            	</form>
-      		</div>
-      		<div class="modal-footer">
-        		<button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
-      		</div>
-    	</div>
-  	</div>
-</div>
-
 <div class="col-sm-12">
 	<form method="POST" class="form-horizontal" name="formIngreso">
 		<div class="form-group">
