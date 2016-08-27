@@ -1,5 +1,5 @@
 <div class="col-sm-12" style="margin-bottom:30px;">
-	<div class="col-sm-8">
+	<div class="col-sm-7">
 		<img ng-src="img/{{tema.idImportancia}}.png" height="20" alt="icon">
 		<b>{{tema.tema}}</b>
 		<kbd>A{{tema.idArea}}</kbd>
@@ -8,7 +8,7 @@
 			{{tg}}
 		</a>
 	</div>
-	<div class="col-sm-4 text-right">
+	<div class="col-sm-5 text-right">
 		<button type="button" class="btn btn-xs btn-default" ng-click="tema.showAdj=!tema.showAdj">
 			<span class="glyphicon glyphicon-link"></span>
 			<span class="badge">{{tema.adjuntos.length}}</span>
