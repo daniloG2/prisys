@@ -3,10 +3,61 @@ var miApp = angular.module('app', ['ngRoute']);
 miApp.controller('home', function($scope, $http){
 	$scope.catArea = [];
 
+
+	$("#documentos").fileinput({
+		language: 'es',
+	    uploadUrl: "class/archivos.php",
+        showRemove : false,
+	    showUpload : true,
+	    autoReplace: true,
+        minFileCount: 1,
+		uploadAsync: false,
+		uploadExtraData: function() {
+			return {
+				idTema: $scope.idTema,
+			};
+		}
+
+	})
+	.on('filebatchpreupload', function(event, data, previewId, index) {
+    	var form = data.form, files = data.files, extra = data.extra, response = data.response, reader = data.reader;
+    	console.log('LOTES DE CARGA DE ARCHIVOS', data);
+	})
+	.on('fileuploaded', function(event, data, previewId, index) {
+    	alert( data.response.mensaje );
+   		if( data.response.respuesta ){
+   			$(".close.fileinput-remove").click();
+   			$('#modalArchivos').modal('hide');
+   			$scope.idTema       = undefined;
+   			$scope.subirArchivo = false;
+   		}
+	})
+	.on('filebatchuploadsuccess', function(event, data, previewId, index) {
+   		alert( data.response.mensaje );
+   		if( data.response.respuesta ){
+   			$(".close.fileinput-remove").click();
+   			$('#modalArchivos').modal('hide');
+   			$scope.idTema       = undefined;
+   			$scope.subirArchivo = false;
+   		}
+	})
+	.on('filebatchuploaderror', function(event, data, msg) {
+    	alert( "No se logro recibir información para guardar." );
+	})
+	.on('fileuploaderror', function(event, data, msg) {
+    	var form = data.form, files = data.files, extra = data.extra, response = data.response, reader = data.reader;
+    	alert( msg );
+	});
+
 	$http.post('response.php', {accion: 'iniCat'})
 	.success(function (data) {
 		$scope.catArea = data.catArea;
 	});
+
+	$scope.asignarIdTema = function( idTema ){
+		$scope.idTema = angular.copy( idTema );
+	}
+	
 });
 
 

@@ -1,6 +1,6 @@
 miApp.controller('ctrlTema', function($scope, $http, $routeParams, $timeout, $sce){
 	$scope.tema = {}; 
-
+	$scope.$parent.asignarIdTema( $routeParams.idTema );
 	$scope.verTema = function ( idTema ) {
 		$http.post('response.php', {
 			accion : 'verTema',
