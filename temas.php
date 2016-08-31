@@ -34,11 +34,6 @@
 						{{tg}}
 					</a>
 				</td>
-				<td>
-					<button type="button" class="btn btn-info btn-xs" data-toggle="modal" data-target="#modalArchivos" ng-click="asignarIdTema( tm.idTema )">
-					  <span class="glyphicon glyphicon-cloud-upload"></span>
-					</button>
-				</td>
 			</tr>
 		</tbody>
 	</table>
