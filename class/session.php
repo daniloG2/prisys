@@ -5,10 +5,17 @@
 */
 class Session
 {
-	// INGRESO DE NUEVO SOCIO
-	public function ingresar( $nombre = "", $direccion = "", $telefono, $cui )
+	public function valid()
 	{
-		
+		if ( isset( $_SESSION['login'] ) AND $_SESSION['login'] )
+			return true;
+		else
+			return false;
+	}
+
+	public function getUser()
+	{
+		return $_SESSION['user'];
 	}
 }
 

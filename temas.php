@@ -25,6 +25,8 @@
 					<a ng-href="#/tema/{{tm.idTema}}" target="_blank">
 						<span class="glyphicon glyphicon-new-window" style="font-size:14px;margin-left:5px"></span>
 					</a>
+					<span class="label label-success" style="margin-left:7px" ng-show="tm.visto">Visto</span>
+					<span class="label label-default1" style="margin-left:7px" ng-show="!tm.visto">No Visto</span>
 				</td>
 				<td>{{tm.descripcionCorta}}</td>
 				<td>{{tm.fecha}}</td>

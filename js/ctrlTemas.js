@@ -12,7 +12,7 @@ miApp.controller('ctrlTemas', function($scope, $http, $routeParams, $timeout){
 			importancia : $scope.importancia
 		})
 		.success(function (data) {
-
+			console.log( data.lstTemas );
 			if ( data.lstTemas )
 				$scope.lstTemas = data.lstTemas;
 		});

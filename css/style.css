@@ -29,6 +29,11 @@ body{
     box-shadow: 0px 2px 4px #d0dcde;
 }
 
+.label-default1{
+    background-color: #f1f1f1;
+    color: #636363;
+}
+
 .ventana{
     display: block;
     width: 100%;

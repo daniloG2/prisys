@@ -7,16 +7,18 @@ class Tema
 {
 	public function nuevoTema()
 	{
-		global $conexion, $data;
+		global $conexion, $data, $session;
 		$respuesta = array( "response" => 0, "msg" => "ERROR" );
 		$tema      = $data->tema;
 		$idTema    = uniqid();
 
 		$tema->descripcion = $conexion->real_escape_string( $tema->descripcion );
 
-		$sql = "INSERT INTO tema VALUES 
-				('{$idTema}', {$tema->idArea}, '{$tema->tema}', '{$tema->descripcion}', $tema->idImportancia, 
-					now(), '" . $_SESSION['user'] . "')";
+		$sql = "INSERT INTO tema 
+				(idTema, idTipoTema, idArea, tema, descripcion, idImportancia, fechaHora, usuario) 
+					VALUES 
+				('{$idTema}', 1, {$tema->idArea}, '{$tema->tema}', '{$tema->descripcion}', $tema->idImportancia, 
+					now(), '{$session->getUser()}')";
 		if ( $conexion->query( $sql ) ) {
 			if ( count( $tema->tags ) ) {
 				$tags = "";
@@ -33,7 +35,7 @@ class Tema
 					if ( $biblio->idTipoBibliografia == 1 ) {
 						$biblio->paginaLibro = $biblio->paginaLibro > 0 ? $biblio->paginaLibro : 0;
 						$sql = "INSERT INTO temaBibliografia 
-								VALUES ( '{$idTema}', {$biblio->idBibliografia}, {$biblio->paginaLibro}, '', now(), '{$_SESSION["user"]}' )";
+								VALUES ( '{$idTema}', {$biblio->idBibliografia}, {$biblio->paginaLibro}, '', now(), '{$session->getUser()}' )";
 						$conexion->query( $sql );
 					}else if ( $biblio->idTipoBibliografia == 2 ) {
 						$sql = "INSERT INTO bibliografia (idTipoBibliografia, bibliografia, url) 
@@ -42,7 +44,7 @@ class Tema
 						$biblio->idBibliografia = $conexion->insert_id;
 
 						$sql = "INSERT INTO temaBibliografia 
-								VALUES ( '{$idTema}', {$biblio->idBibliografia}, NULL, '', now(), '{$_SESSION["user"]}' )";
+								VALUES ( '{$idTema}', {$biblio->idBibliografia}, NULL, '', now(), '{$session->getUser()}' )";
 						$conexion->query( $sql );
 					}
 				}
@@ -59,7 +61,7 @@ class Tema
 
 	public function modificarTema( $idTema, $descripcion )
 	{
-		global $conexion, $data;
+		global $conexion, $data, $session;
 		$respuesta = array( "response" => 0, "msg" => "ERROR" );
 
 		$descripcion = $conexion->real_escape_string( $descripcion );
@@ -67,7 +69,7 @@ class Tema
 		$sql = "SELECT usuario FROM tema WHERE idTema = '{$idTema}' ";
 		$rs = $conexion->query( $sql );
 		if ( $row = $rs->fetch_object() ) {
-			if ( $row->usuario == $_SESSION['user'] ) {
+			if ( $row->usuario == $session->getUser() ) {
 				$sql = "UPDATE tema SET descripcion = '{$descripcion}' 
 						WHERE idTema = '{$idTema}' ";
 				if ( $conexion->query( $sql ) ) {
@@ -87,7 +89,7 @@ class Tema
 
 	public function lstTemas()
 	{
-		global $conexion, $data;
+		global $conexion, $data, $session;
 
 		$lstTemas = array();
 		$order    = "";
@@ -97,10 +99,10 @@ class Tema
 			$order = " i.idImportancia ASC, ";
 
 		if ( isset( $data->tag ) AND strlen( $data->tag ) > 1 )
-			$where = " WHERE !ISNULL( et.idTema ) AND et.etiqueta = '{$data->tag}' ";
+			$where = " !ISNULL( et.idTema ) AND et.etiqueta = '{$data->tag}' ";
 		
 		else
-			$where = " WHERE t.idArea = {$data->idArea} ";
+			$where = " t.idArea = {$data->idArea} ";
 
 		$sql = "SELECT 
 				    t.idTema,
@@ -114,6 +116,7 @@ class Tema
 				    i.importancia,
 				    u.usuario,
 				    u.nombre,
+				    IF( !ISNULL( tv.idTema ), 1, 0 ) AS 'visto',
 				    GROUP_CONCAT(et.etiqueta
 				        SEPARATOR '_R_') AS 'etiquetas'
 				FROM
@@ -126,13 +129,16 @@ class Tema
 				    usuario AS u ON t.usuario = u.usuario
 				        LEFT JOIN
 				    etiquetaTema AS et ON t.idTema = et.idTema
-				$where
+				    	LEFT JOIN
+				    temaVisto AS tv
+				    	ON t.idTema = tv.idTema AND tv.usuario = '{$session->getUser()}'
+				WHERE t.idTipoTema = 1 AND $where
 				GROUP BY t.idTema
 				ORDER BY i.idImportancia ASC, t.fechaHora ASC ";
 
 		$rs = $conexion->query( $sql );
 		while ( $row = $rs->fetch_object() ) {
-			
+			$row->visto = (bool)$row->visto;
 			if ( strlen( $row->etiquetas ) )
 				$row->etiquetas = explode( "_R_", $row->etiquetas );
 			
@@ -147,9 +153,13 @@ class Tema
 
 	public function verTema( $idTema )
 	{
-		global $conexion;
+		global $conexion, $session;
 
 		$miTema = (object)array();
+
+		// MARCA COMO TEMA VISTO
+		$sql = "INSERT INTO temaVisto VALUES ('{$idTema}', '{$session->getUser()}', NOW() )";
+		$conexion->query( $sql );
 
 		$sql = "SELECT 
 				    t.idTema,
@@ -182,6 +192,7 @@ class Tema
 				$row->etiquetas = array();
 
 			$row->comentarios   = $this->lstComentarios( $idTema );
+			$row->preguntas     = $this->lstPreguntas( $idTema );
 			$row->adjuntos      = $this->lstAdjuntos( $idTema );
 			$row->bibliografias = array();
 
@@ -206,7 +217,7 @@ class Tema
 
 	public function lstComentarios( $idTema )
 	{
-		global $conexion;
+		global $conexion, $session;
 		$comentarios = array();
 
 		$sql = "SELECT 
@@ -218,7 +229,7 @@ class Tema
 					u.nombre,
 				    ROUND(SUM( IFNULL( cc.idImportancia, 0) ) /
 				    COUNT( cc.idComentario ))AS 'ranking',
-					SUM( IF( cc.usuario = '" . $_SESSION['user'] . "', cc.idImportancia, 0 ) )AS 'miVoto'
+					SUM( IF( cc.usuario = '{$session->getUser()}', cc.idImportancia, 0 ) )AS 'miVoto'
 				FROM comentario AS c
 					JOIN usuario AS u
 						ON c.usuario = u.usuario
@@ -233,6 +244,27 @@ class Tema
 		}
 
 		return $comentarios;
+	}
+
+	public function lstPreguntas( $idTema )
+	{
+		global $conexion, $session;
+		$preguntas = array();
+
+		$sql = "SELECT 
+					p.pregunta,
+					p.descripcion,
+					p.usuario,
+					DATE_FORMAT( p.fechaHora, '%d/%m/%Y %H:%i' ) AS 'fecha'
+				FROM pregunta AS p 
+				WHERE p.idTema = '{$idTema}' 
+				ORDER BY p.fechaHora ASC ";
+		$rs = $conexion->query( $sql );
+		while ( $row = $rs->fetch_object() ) {
+			$preguntas[] = $row;
+		}
+
+		return $preguntas;
 	}
 
 	public function lstAdjuntos( $idTema )
@@ -253,16 +285,34 @@ class Tema
 		return $adjuntos;
 	}
 
+	public function agregarPregunta( $idTema, $pregunta, $descripcion )
+	{
+		global $conexion, $session;
+		$respuesta = array( "response" => 0, "msg" => "ERROR" );
+
+		$descripcion = $conexion->real_escape_string( $descripcion );
+
+		$sql = "INSERT INTO pregunta VALUES 
+				( '{$idTema}', '{$pregunta}', '{$descripcion}', '{$session->getUser()}', NOW() )";
+		if ( $conexion->query( $sql ) ) {
+			$respuesta = array( "response" => 1, "msg" => "Guardado correctamente", "lstPreguntas" => $this->lstPreguntas( $idTema ) );
+		}else{
+			$respuesta = array( "response" => 0, "msg" => $conexion->error );
+		}
+
+		return $respuesta;
+	}
+
 	public function agregarComentario( $idTema, $comentario )
 	{
-		global $conexion;
+		global $conexion, $session;
 		$respuesta = array( "response" => 0, "msg" => "ERROR" );
 
 		$idComentario = uniqid();
 		$comentario = $conexion->real_escape_string( $comentario );
 
 		$sql = "INSERT INTO comentario VALUES 
-				('{$idComentario}', '{$idTema}', NULL, '{$comentario}', now(), '" . $_SESSION['user'] . "')";
+				('{$idComentario}', '{$idTema}', NULL, '{$comentario}', now(), '{$session->getUser()}')";
 		if ( $conexion->query( $sql ) ) {
 			$respuesta = array( "response" => 1, "msg" => "Guardado correctamente", "lstComentarios" => $this->lstComentarios( $idTema ) );
 		}else{
@@ -274,11 +324,11 @@ class Tema
 
 	public function votarTema( $idComentario, $idTema, $voto )
 	{
-		global $conexion;
+		global $conexion, $session;
 		$respuesta = array( "response" => 0, "msg" => "ERROR" );
 
 		$sql = "INSERT INTO calificacionComentario (idComentario, usuario, idImportancia) 
-				VALUES ('{$idComentario}', '" . $_SESSION['user'] . "', {$voto} )
+				VALUES ('{$idComentario}', '{$session->getUser()}', {$voto} )
 				ON DUPLICATE KEY UPDATE idImportancia = {$voto} ";
 		if ( $conexion->query( $sql ) ) {
 			$respuesta = array( "response" => 1, "msg" => "Guardado correctamente", "lstComentarios" => $this->lstComentarios( $idTema ) );

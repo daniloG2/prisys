@@ -1,3 +1,10 @@
+<?php 
+session_start();
+
+$_SESSION['user'] = 'rigo';
+$_SESSION['login'] = true;
+
+?>
 <!DOCTYPE html>
 <html lang="es" ng-app="app">
 <head>

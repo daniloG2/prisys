@@ -1,5 +1,7 @@
 miApp.controller('ctrlTema', function($scope, $http, $routeParams, $timeout, $sce){
-	$scope.tema = {}; 
+	$scope.tema     = {}; 
+	$scope.pregunta = "";
+
 	$scope.$parent.asignarIdTema( $routeParams.idTema );
 	$scope.verTema = function ( idTema ) {
 		$http.post('response.php', {
@@ -25,8 +27,8 @@ miApp.controller('ctrlTema', function($scope, $http, $routeParams, $timeout, $sc
 			return false;
 
 		$http.post('response.php', {
-			accion : 'agregarComentario',
-			idTema : $routeParams.idTema,
+			accion     : 'agregarComentario',
+			idTema     : $routeParams.idTema,
 			comentario : comentario
 		})
 		.success(function (data) {
@@ -42,7 +44,34 @@ miApp.controller('ctrlTema', function($scope, $http, $routeParams, $timeout, $sc
 				alert( msg );
 			}
 		});
-	}
+	};
+
+	$scope.agregarPregunta = function () {
+		var descripcion = $("#divEditPregunta").html();
+
+		if ( !( descripcion.length > 5 ) || !( $scope.pregunta.length > 3 ) )
+			return false;
+
+		$http.post('response.php', {
+			accion      : 'agregarPregunta',
+			idTema      : $routeParams.idTema,
+			pregunta    : $scope.pregunta,
+			descripcion : descripcion
+		})
+		.success(function (data) {
+			if ( data.response ) {
+				$scope.tema.preguntas = data.lstPreguntas;
+				$scope.ventana2 = false;
+
+				$("#divEditPregunta").html("");
+
+				alert( data.msg );
+			}else{
+				var msg = data.msg ? data.msg : data;
+				alert( msg );
+			}
+		});
+	};
 
 	$scope.modificarTema = function () {
 		var descripcion = $("#verTema").html();
@@ -87,7 +116,6 @@ miApp.controller('ctrlTema', function($scope, $http, $routeParams, $timeout, $sc
 		return $sce.trustAsHtml( html );
 	};
 
-	$('#divEdit').trumbowyg();
-	$('#verTema').trumbowyg();
+	$('#divEdit,#verTema,#divEditPregunta').trumbowyg();
 
 });

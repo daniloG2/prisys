@@ -1,6 +1,5 @@
 <?php
 @session_start();
-$_SESSION['user'] = 'rigo';
 $data = json_decode( file_get_contents("php://input") );
 
 // SE VALIDA SI SE ESTA RECIBIENDO UNA ACCION VALIDA
@@ -13,6 +12,8 @@ require 'class/conexion.php';
 require 'class/session.php';
 require 'class/catalogo.php';
 require 'class/tema.php';
+
+$session = new Session();
 
 $conexion = Conexion();
 switch ( $data->accion ) {
@@ -58,6 +59,13 @@ switch ( $data->accion ) {
 	case 'agregarComentario':
 		$tema = new Tema();
 		$datos = $tema->agregarComentario( $data->idTema, $data->comentario );
+
+		echo json_encode( $datos );
+	break;
+
+	case 'agregarPregunta':
+		$tema = new Tema();
+		$datos = $tema->agregarPregunta( $data->idTema, $data->pregunta, $data->descripcion );
 
 		echo json_encode( $datos );
 	break;
