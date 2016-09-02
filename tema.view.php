@@ -1,3 +1,11 @@
+<div class="col-sm-12" style="margin-top: -39px;">
+	<h3>
+		<span class="label" style="margin-left:7px"
+			ng-class="{'label-success':tema.idTipoTema==1, 
+					'label-info':tema.idTipoTema==2,
+					'label-primary':tema.idTipoTema==3}">Tipo » {{tema.tipoTema}}</span>
+	</h3>
+</div>
 <div class="col-sm-12" style="margin-bottom:30px;">
 	<div class="col-sm-7">
 		<img ng-src="img/{{tema.idImportancia}}.png" height="20" alt="icon">

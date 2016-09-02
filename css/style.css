@@ -34,6 +34,12 @@ body{
     color: #636363;
 }
 
+.label-success1{
+    background-color: #d8f9d5;
+    color: #22562e;
+    border: solid 1px #bee8bb;
+}
+
 .ventana{
     display: block;
     width: 100%;

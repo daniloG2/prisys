@@ -1,9 +1,40 @@
+<div class="col-sm-12" style="margin-top:-17px;margin-bottom:7px">
+	<div class="col-sm-4">
+		<h4 ng-show="tipoTema=='tema'">
+			<span class="label label-success">Ingresar Nuevo Tema</span>
+		</h4>
+		<h4 ng-show="tipoTema=='pregunta'">
+			<span class="label label-info">Ingresar Nuevo Pregunta</span>
+		</h4>
+		<h4 ng-show="tipoTema=='tips'">
+			<span class="label label-primary">Ingresar Nuevo Tip</span>
+		</h4>
+	</div>
+	<div class="col-sm-8 text-right">
+		<a ng-href="#/ingresar/tema" class="btn btn-sm" ng-class="{'btn-primary':tipoTema=='tema', 'btn-link':tipoTema!='tema'}">
+			<span class="glyphicon" 
+				ng-class="{'glyphicon-ok-circle':tipoTema=='tema', 'glyphicon-remove-circle':tipoTema!='tema'}"></span>
+			<b>Tema</b>
+		</a>
+		<a ng-href="#/ingresar/pregunta" class="btn btn-sm" ng-class="{'btn-primary':tipoTema=='pregunta', 'btn-link':tipoTema!='pregunta'}">
+			<span class="glyphicon" 
+				ng-class="{'glyphicon-ok-circle':tipoTema=='pregunta', 'glyphicon-remove-circle':tipoTema!='pregunta'}"></span>
+			<b>Pregunta</b>
+		</a>
+		<a ng-href="#/ingresar/tips" class="btn btn-sm" ng-class="{'btn-primary':tipoTema=='tips', 'btn-link':tipoTema!='tips'}">
+			<span class="glyphicon" 
+				ng-class="{'glyphicon-ok-circle':tipoTema=='tips', 'glyphicon-remove-circle':tipoTema!='tips'}"></span>
+			<b>Tip</b>
+		</a>
+	</div>
+</div>
+
 <div class="col-sm-12">
 	<form method="POST" class="form-horizontal" name="formIngreso">
 		<div class="form-group">
-			<label class="col-sm-1">Tema</label>
+			<label class="col-sm-1">Título</label>
 			<div class="col-sm-6">
-				<input type="text" ng-model="tema.tema" class="form-control" placeholder="Tema" autofocus>
+				<input type="text" ng-model="tema.tema" class="form-control" placeholder="Tema" id="tituloTema" autofocus>
 			</div>
 			<label class="col-sm-1">Area</label>
 			<div class="col-sm-4">
@@ -40,9 +71,9 @@
 				Subir Archivos
 			</button>
 		</div>
-		<div class="form-group">
-			<label class="col-sm-1">Bibliografía</label>
-			<div class="col-sm-2">
+		<div class="form-group" ng-show="tipoTema=='tema'">
+			<label class="col-sm-2">Bibliografía</label>
+			<div class="col-sm-3">
 				<select ng-model="idTipoBibliografia" class="form-control">
 					<option value="">Ningúno</option>
 					<option value="{{b.idTipoBibliografia}}" ng-repeat="b in catTipoBibliografia" ng-show="$index<2">{{b.tipoBibliografia}}</option>
@@ -57,9 +88,9 @@
 			<div class="col-sm-2">
 				<input type="number" ng-model="paginaLibro" class="form-control" placeholder="# Página" ng-show="idTipoBibliografia==1">
 			</div>
-			<div class="col-sm-2">
-				<button type="button" class="btn btn-primary" ng-click="addBiblio()">
-					<span class="glyphicon glyphicon-ok"></span>
+			<div class="col-sm-1 text-right">
+				<button type="button" class="btn btn-sm btn-primary" ng-click="addBiblio()">
+					<span class="glyphicon glyphicon-plus"></span>
 				</button>
 			</div>
 			<div class="col-sm-11 col-sm-offset-1">
@@ -84,7 +115,7 @@
 		</div>
 
 		<div class="form-group">
-			<div class="col-sm-10 col-sm-offset-2">
+			<div class="col-sm-12 text-center">
 				<button type="button" class="btn btn-success" ng-click="guardarTema()">
 					<span class="glyphicon glyphicon-ok"></span>
 					<b>Guardar Tema</b>

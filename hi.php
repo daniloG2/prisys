@@ -1,3 +1,4 @@
 <div class="col-sm-12 text-center">
-	<h3>Bienvenido Amigo Sentenciado</h3>
+	<h2>Bienvenido Amigo Sentenciado</h2>
+	<h1>:(</h1>
 </div>

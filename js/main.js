@@ -3,6 +3,18 @@ var miApp = angular.module('app', ['ngRoute']);
 miApp.controller('home', function($scope, $http){
 	$scope.catArea = [];
 
+	$scope.idAreaTema     = "";
+	$scope.idAreaPregunta = "";
+	$scope.idAreaTips     = "";
+
+	if ( localStorage.getItem( "idAreaTema" ) )
+		$scope.idAreaTema = "/" + localStorage.getItem( "idAreaTema" );
+
+	if ( localStorage.getItem( "idAreaPregunta" ) )
+		$scope.idAreaPregunta = "/" + localStorage.getItem( "idAreaPregunta" );
+
+	if ( localStorage.getItem( "idAreaTips" ) )
+		$scope.idAreaTips = "/" + localStorage.getItem( "idAreaTips" );
 
 	$("#documentos").fileinput({
 		language: 'es',
@@ -66,11 +78,11 @@ miApp.config(function($routeProvider) {
 	.when('/',{
 		templateUrl : 'hi.php'
 	})
-	.when('/ingresar',{
+	.when('/ingresar/:tipoTema',{
 		templateUrl : 'ingresar.tema.php',
 		controller : 'ctrlIngresar'
 	})
-	.when('/temas/:idArea', {
+	.when('/temas/:tipoTema/:idArea?', {
 		templateUrl : 'temas.php',
 		controller  : 'ctrlTemas'
 	})

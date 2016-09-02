@@ -5,6 +5,7 @@ miApp.controller('ctrlIngresar', function($scope, $http, $routeParams, $timeout)
 	$scope.catImportancia      = [];
 	$scope.catTipoBibliografia = [];
 	$scope.catBibliografia     = [];
+	$scope.tipoTema            = ""
 	$scope.tag                 = "";
 	$scope.tema                = {
 		idArea        : 0,
@@ -14,6 +15,10 @@ miApp.controller('ctrlIngresar', function($scope, $http, $routeParams, $timeout)
 		tags 		  : [],
 		bibliografias : []
 	};
+
+	if ( $routeParams.tipoTema ) {
+		$scope.tipoTema = $routeParams.tipoTema;
+	}
 
 	$scope.idTipoBibliografia = "";
 	$scope.idBibliografia     = "";
@@ -38,7 +43,9 @@ miApp.controller('ctrlIngresar', function($scope, $http, $routeParams, $timeout)
 		$scope.catBibliografia     = data.catBibliografia;
 
 		$timeout(function () {
-			$scope.tema.idArea        = $scope.catArea[ 0 ].idArea;
+			if ( localStorage.getItem("idAreaTemaIngreso") )
+				$scope.tema.idArea = localStorage.getItem("idAreaTemaIngreso");
+			
 			$scope.tema.idImportancia = $scope.catImportancia[ 0 ].idImportancia;
 		});
 	});
@@ -100,13 +107,17 @@ miApp.controller('ctrlIngresar', function($scope, $http, $routeParams, $timeout)
 			alert( "Importancia no def" );
 
 		else if ( !( $scope.tema.tema.length > 3 ) )
-			alert( "Tema no def" );
+			alert( "Título no def" );
 
 		else if ( !( $scope.tema.descripcion.length > 5 ) )
 			alert( "Descripcion no def" );
 
 		else{
-			$http.post('response.php', {accion: 'nuevoTema', tema : $scope.tema })
+			$http.post('response.php', {
+				accion   : 'nuevoTema',
+				tema     : $scope.tema,
+				tipoTema : $scope.tipoTema
+			})
 			.success(function (data) {
 				console.log(data);
 				if ( data.response ) {
@@ -136,6 +147,19 @@ miApp.controller('ctrlIngresar', function($scope, $http, $routeParams, $timeout)
 		$("#divEdit").html("");
 		$("#divEdit").html("");
 	};
+
+	$timeout(function () {
+		$("#tituloTema").focus();
+	});
+
+	$scope.$watch('tema.idArea', function (_new) {
+		if ( _new > 0 ) {
+			localStorage.setItem("idAreaTemaIngreso", _new);
+		}
+	});
 	
 	$('#divEdit').trumbowyg();
 });
+
+
+

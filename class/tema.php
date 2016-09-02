@@ -14,10 +14,19 @@ class Tema
 
 		$tema->descripcion = $conexion->real_escape_string( $tema->descripcion );
 
+		if ( $data->tipoTema == 'tema' )
+			$idTipoTema = 1;
+
+		else if ( $data->tipoTema == 'pregunta' )
+			$idTipoTema = 2;
+
+		else if ( $data->tipoTema == 'tips' )
+			$idTipoTema = 3;
+
 		$sql = "INSERT INTO tema 
 				(idTema, idTipoTema, idArea, tema, descripcion, idImportancia, fechaHora, usuario) 
 					VALUES 
-				('{$idTema}', 1, {$tema->idArea}, '{$tema->tema}', '{$tema->descripcion}', $tema->idImportancia, 
+				('{$idTema}', {$idTipoTema}, {$tema->idArea}, '{$tema->tema}', '{$tema->descripcion}', $tema->idImportancia, 
 					now(), '{$session->getUser()}')";
 		if ( $conexion->query( $sql ) ) {
 			if ( count( $tema->tags ) ) {
@@ -98,11 +107,21 @@ class Tema
 		if ( isset( $data->importancia ) AND $data->importancia )
 			$order = " i.idImportancia ASC, ";
 
-		if ( isset( $data->tag ) AND strlen( $data->tag ) > 1 )
+		if ( isset( $data->tag ) AND strlen( $data->tag ) > 1 ):
 			$where = " !ISNULL( et.idTema ) AND et.etiqueta = '{$data->tag}' ";
 		
-		else
-			$where = " t.idArea = {$data->idArea} ";
+		else:
+			if ( $data->tipoTema == 'tema' )
+				$idTipoTema = 1;
+
+			else if ( $data->tipoTema == 'pregunta' )
+				$idTipoTema = 2;
+
+			else if ( $data->tipoTema == 'tips' )
+				$idTipoTema = 3;
+
+			$where = " t.idArea = {$data->idArea} AND t.idTipoTema = {$idTipoTema} ";
+		endif;
 
 		$sql = "SELECT 
 				    t.idTema,
@@ -118,11 +137,15 @@ class Tema
 				    u.nombre,
 				    IF( !ISNULL( tv.idTema ), 1, 0 ) AS 'visto',
 				    GROUP_CONCAT(et.etiqueta
-				        SEPARATOR '_R_') AS 'etiquetas'
+				        SEPARATOR '_R_') AS 'etiquetas',
+				    tt.idTipoTema,
+				    tt.tipoTema
 				FROM
 				    tema AS t
 				        JOIN
 				    area AS a ON t.idArea = a.idArea
+				    	JOIN
+				    tipoTema AS tt ON t.idTipoTema = tt.idTipoTema
 				        JOIN
 				    importancia AS i ON t.idImportancia = i.idImportancia
 				        JOIN
@@ -132,7 +155,7 @@ class Tema
 				    	LEFT JOIN
 				    temaVisto AS tv
 				    	ON t.idTema = tv.idTema AND tv.usuario = '{$session->getUser()}'
-				WHERE t.idTipoTema = 1 AND $where
+				WHERE $where
 				GROUP BY t.idTema
 				ORDER BY i.idImportancia ASC, t.fechaHora ASC ";
 
@@ -172,9 +195,13 @@ class Tema
 				    t.idImportancia,
 				    u.usuario,
 				    u.nombre,
-				    GROUP_CONCAT(et.etiqueta SEPARATOR '_R_') AS 'etiquetas'
+				    GROUP_CONCAT(et.etiqueta SEPARATOR '_R_') AS 'etiquetas',
+				    tt.idTipoTema,
+				    tt.tipoTema
 				FROM
 				    tema AS t
+				    	JOIN
+				    tipoTema AS tt ON t.idTipoTema = tt.idTipoTema
 				        JOIN
 				    area AS a ON t.idArea = a.idArea
 				        JOIN

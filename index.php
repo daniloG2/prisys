@@ -1,8 +1,8 @@
 <?php 
 session_start();
 
-$_SESSION['user'] = 'rigo';
-$_SESSION['login'] = true;
+if ( IS_NULL( $_SESSION ) OR !$_SESSION['login'] )
+	header("Location: login.php");
 
 ?>
 <!DOCTYPE html>
@@ -20,10 +20,16 @@ $_SESSION['login'] = true;
 		<a class="navbar-brand" href="#/">PriSys</a>
 		<ul class="nav navbar-nav">
 			<li class="active">
-				<a href="#/ingresar">Ingreso Tema</a>
+				<a href="#/ingresar/tema">Ingresar</a>
 			</li>
 			<li>
-				<a href="#/temas/1">Temas</a>
+				<a ng-href="#/temas/tema{{idAreaTema}}">Temas</a>
+			</li>
+			<li>
+				<a ng-href="#/temas/pregunta{{idAreaPregunta}}">Preguntas</a>
+			</li>
+			<li>
+				<a ng-href="#/temas/tips{{idAreaTips}}">Tips</a>
 			</li>
 			<li>
 				<a href="logout.php">Salir</a>
