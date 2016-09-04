@@ -44,6 +44,9 @@ endif;
 <div class="container">
 	<div class="col-sm-6 col-sm-offset-3">
 		<?php if ( isset( $message ) ) { ?>
+		<div class="col-sm-12 text-center">
+			<img src="img/seas.jpg" height="180">
+		</div>
 		<div class="col-sm-12">
 			<h4 class="alert alert-danger"><?= $message;?></h4>
 		</div>
