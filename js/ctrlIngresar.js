@@ -35,8 +35,10 @@ miApp.controller('ctrlIngresar', function($scope, $http, $routeParams, $timeout)
 		}
 	});
 
+	$("#cargando").show();
 	$http.post('response.php', {accion: 'iniCat'})
 	.success(function (data) {
+		$("#cargando").hide();
 		$scope.catArea             = data.catArea;
 		$scope.catImportancia      = data.catImportancia;
 		$scope.catTipoBibliografia = data.catTipoBibliografia;
@@ -113,13 +115,16 @@ miApp.controller('ctrlIngresar', function($scope, $http, $routeParams, $timeout)
 			alert( "Descripcion no def" );
 
 		else{
+			$("#cargando").show();
+			
 			$http.post('response.php', {
 				accion   : 'nuevoTema',
 				tema     : $scope.tema,
 				tipoTema : $scope.tipoTema
 			})
 			.success(function (data) {
-				console.log(data);
+				$("#cargando").hide();
+
 				if ( data.response ) {
 					alert( data.msg );
 					$scope.reset();

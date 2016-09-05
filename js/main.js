@@ -94,6 +94,10 @@ miApp.config(function($routeProvider) {
 		templateUrl : 'temas.php',
 		controller  : 'ctrlTemas'
 	})
+	.when('/biblio', {
+		templateUrl : 'biblio.php',
+		controller  : 'ctrlBiblio'
+	})
 	.otherwise({
 		redirectTo: '/'
 	});

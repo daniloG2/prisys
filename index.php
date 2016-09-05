@@ -15,6 +15,13 @@ if ( IS_NULL( $_SESSION ) OR !$_SESSION['login'] )
 	<link rel="stylesheet" href="css/fileinput.css">
 </head>
 <body ng-controller="home">
+<div class="cargando" id="cargando">
+	<div class="loading-bro">
+		<svg id="load" x="0px" y="0px" viewBox="0 0 150 150">
+			<circle id="loading-inner" cx="75" cy="75" r="60"/>
+		</svg>
+	</div>
+</div>
 <div class="navbar">
 	<div class="container-fluid">
 		<a class="navbar-brand" href="#/">PriSys</a>
@@ -30,6 +37,12 @@ if ( IS_NULL( $_SESSION ) OR !$_SESSION['login'] )
 			</li>
 			<li>
 				<a ng-href="#/temas/tips{{idAreaTips}}">Tips</a>
+			</li>
+			<li>
+				<a ng-href="#/biblio">
+					<span class="glyphicon glyphicon-book"></span>
+					Books
+				</a>
 			</li>
 			<li>
 				<a href="logout.php">Salir</a>
@@ -74,5 +87,6 @@ if ( IS_NULL( $_SESSION ) OR !$_SESSION['login'] )
 <script src="js/ctrlIngresar.js"></script>
 <script src="js/ctrlTemas.js"></script>
 <script src="js/ctrlTema.js"></script>
+<script src="js/ctrlBiblio.js"></script>
 </body>
 </html>

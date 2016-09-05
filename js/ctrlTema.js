@@ -4,11 +4,14 @@ miApp.controller('ctrlTema', function($scope, $http, $routeParams, $timeout, $sc
 
 	$scope.$parent.asignarIdTema( $routeParams.idTema );
 	$scope.verTema = function ( idTema ) {
+		$("#cargando").show();
 		$http.post('response.php', {
 			accion : 'verTema',
 			idTema : idTema
 		})
 		.success(function (data) {
+			$("#cargando").hide();
+
 			$scope.tema = data.tema;
 			$timeout(function () {
 				$('#verTema').trumbowyg("html", data.tema.descripcion);
@@ -26,12 +29,15 @@ miApp.controller('ctrlTema', function($scope, $http, $routeParams, $timeout, $sc
 		if ( !( comentario.length > 5 ) )
 			return false;
 
+		$("#cargando").show();
 		$http.post('response.php', {
 			accion     : 'agregarComentario',
 			idTema     : $routeParams.idTema,
 			comentario : comentario
 		})
 		.success(function (data) {
+			$("#cargando").hide();
+
 			if ( data.response ) {
 				$scope.tema.comentarios = data.lstComentarios;
 				$scope.ventana1 = false;
@@ -52,6 +58,7 @@ miApp.controller('ctrlTema', function($scope, $http, $routeParams, $timeout, $sc
 		if ( !( descripcion.length > 5 ) || !( $scope.pregunta.length > 3 ) )
 			return false;
 
+		$("#cargando").show();
 		$http.post('response.php', {
 			accion      : 'agregarPregunta',
 			idTema      : $routeParams.idTema,
@@ -59,6 +66,8 @@ miApp.controller('ctrlTema', function($scope, $http, $routeParams, $timeout, $sc
 			descripcion : descripcion
 		})
 		.success(function (data) {
+			$("#cargando").hide();
+
 			if ( data.response ) {
 				$scope.tema.preguntas = data.lstPreguntas;
 				$scope.ventana2 = false;
@@ -75,6 +84,7 @@ miApp.controller('ctrlTema', function($scope, $http, $routeParams, $timeout, $sc
 
 	$scope.modificarTema = function () {
 		var descripcion = $("#verTema").html();
+		$("#cargando").show();
 
 		$http.post('response.php', {
 			accion      : 'modificarTema',
@@ -82,7 +92,7 @@ miApp.controller('ctrlTema', function($scope, $http, $routeParams, $timeout, $sc
 			descripcion : descripcion
 		})
 		.success(function (data) {
-			console.log( data );
+			$("#cargando").hide();
 			
 			if ( data.response ) {
 				alert( data.msg );
@@ -95,6 +105,7 @@ miApp.controller('ctrlTema', function($scope, $http, $routeParams, $timeout, $sc
 	};
 
 	$scope.votar = function ( idComentario, voto ) {
+		$("#cargando").show();
 		$http.post('response.php', {
 			accion       : 'votarTema',
 			idComentario : idComentario,
@@ -102,6 +113,8 @@ miApp.controller('ctrlTema', function($scope, $http, $routeParams, $timeout, $sc
 			voto         : voto
 		})
 		.success(function (data) {
+			$("#cargando").hide();
+
 			if ( data.response ) {
 				$scope.tema.comentarios = data.lstComentarios
 			}

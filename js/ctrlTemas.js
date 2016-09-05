@@ -10,6 +10,7 @@ miApp.controller('ctrlTemas', function($scope, $http, $routeParams, $timeout){
 
 	$scope.getTemas = function () {
 		$scope.lstTemas = [];
+		$("#cargando").show();
 
 		$http.post('response.php', {
 			accion      : 'getTemas',
@@ -19,7 +20,8 @@ miApp.controller('ctrlTemas', function($scope, $http, $routeParams, $timeout){
 			tipoTema    : $scope.tipoTema
 		})
 		.success(function (data) {
-			console.log( data.lstTemas );
+			$("#cargando").hide();
+
 			if ( data.lstTemas )
 				$scope.lstTemas = data.lstTemas;
 		});
