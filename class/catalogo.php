@@ -50,16 +50,26 @@ class Catalogo
 		return $respuesta;
 	}
 
-	public function catBibliografia()
+	public function catBibliografia( $idArea = NULL )
 	{
 		global $conexion;
+
 		$respuesta = array();
+		$where     = "";
 
-		$sql = "SELECT idBibliografia, bibliografia, url FROM bibliografia WHERE idTipoBibliografia = 1";
-		$result = $conexion->query( $sql );
+		if ( !IS_NULL( $idArea ) )
+			$where = " AND b.idArea = {$idArea} ";
 
-		while ( $row = $result->fetch_object() ) {
-			$respuesta[] = $row;
+		$sql = "SELECT b.idBibliografia, b.bibliografia, b.url, b.idArea, a.area
+				FROM bibliografia AS b
+					JOIN area AS a
+						ON b.idArea = a.idArea
+				WHERE b.idTipoBibliografia = 1 $where
+				ORDER BY b.idBibliografia ASC";
+		if ( $result = $conexion->query( $sql ) ) {
+			while ( $row = $result->fetch_object() ) {
+				$respuesta[] = $row;
+			}
 		}
 
 		return $respuesta;

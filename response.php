@@ -77,6 +77,22 @@ switch ( $data->accion ) {
 		echo json_encode( $respuesta );
 	break;
 
+	case 'catArea':
+		$catalogo         = new Catalogo();
+		$datos['catArea'] = $catalogo->catArea();
+
+		echo json_encode( $datos );
+	break;
+
+	case 'catBibliografia':
+		$catalogo = new Catalogo();
+		$idArea   = ( isset( $data->idArea ) AND (int)$data->idArea > 0 ) ? (int)$data->idArea : NULL;
+		
+		$respuesta['catBibliografia'] = $catalogo->catBibliografia( $idArea );
+
+		echo json_encode( $respuesta );
+	break;
+
 	default:
 		echo json_encode( array("response" => 0, "msg" => "Accion inválida") );
 	break;

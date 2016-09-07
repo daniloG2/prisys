@@ -48,7 +48,7 @@
 				<tbody>
 					<tr ng-repeat="bib in tema.bibliografias">
 						<td>
-							<a ng-href="book/{{bib.url}}#page={{bib.paginaLibro}}" target="_blank" ng-show="bib.idTipoBibliografia==1">
+							<a ng-href="{{bib.url}}#page={{bib.paginaLibro}}" target="_blank" ng-show="bib.idTipoBibliografia==1">
 								<span class="glyphicon glyphicon-book"></span>
 								{{bib.bibliografia}} ({{bib.paginaLibro}})
 							</a>
